@@ -1,15 +1,9 @@
 #include "stdio.h"
 #include "stdlib.h"
-#define MAXN    101
 
-long long f_height(long long h, long long  dp1, long long  dp2)
+long long f_max(long long  a, long long b)
 {
-    long long ha1;
-    long long ha2;
-
-    ha1 = dp1 + h; 
-    ha2 = dp2 + h; 
-    return (ha1 > ha2 ? ha1: ha2);
+    return (a > b ? a: b);
 }
 
 long long  ski(int n, int **a)
@@ -19,16 +13,8 @@ long long  ski(int n, int **a)
     int **dp;
     long long ret;
 
-    printf("\n");
-    i = -1;
-    while (++i < n)
-    {
-        j = -1;
-        while (++j < n - i)
-            printf("%d ", a[i][j]);
-        printf("\n");
-    }
-    ret = 0;
+    if (n == 1)
+        return (a[0][0]);
     dp = (int**)malloc(sizeof(int*) * (n + 1)); 
     i = -1;
     while (++i < n)
@@ -37,35 +23,22 @@ long long  ski(int n, int **a)
     i = 0;
     j = 0;
     while (++j < n)
-    {
         dp[i][j] = dp[i][j - 1] + a[i][j];
-        if ((j == n - 1) && dp[i][j] > ret)
-        {
-            ret = dp[i][j];
-            printf("dp=%d i=%d j=%d\n", dp[i][j], i, j);
-        }
-    }
+    ret = dp[i][j - 1];
     j = 0;
     while (++i < n)
-    {
         dp[i][j] = dp[i - 1][j] + a[i][j];
-        if ((i == n - 1) && dp[i][j] > ret)
-        {
-            ret = dp[i][j];
-            printf("dp=%d i=%d j=%d\n", dp[i][j], i, j);
-        }
-    }
+    if (dp[i - 1][j] > ret)
+        ret = dp[i - 1][j];
     i = 0;
     j = 0;
-    while (++i < n)
+    while (++i < n - 1)
     {
         j = 0;
-        while (++j <= i)
-        {
-            dp[i][j] = f_height(a[i][j], dp[i][j - 1], dp[i - 1][j]);
-            if ((i + j == n - 1) && dp[i][j] > ret)
-                ret = dp[i][j];
-        }
+        while (++j < n - i)
+            dp[i][j] = a[i][j] + f_max(dp[i][j - 1], dp[i - 1][j]);
+        if (dp[i][j - 1] > ret)
+            ret = dp[i][j - 1];
     }
     i = -1;
     while (++i < n)
@@ -77,10 +50,8 @@ long long  ski(int n, int **a)
 int main(void)
 {
     int n;
-    int m;
     int **a;
     int i;
-    int j;
     int k;
 
     scanf("%d", &n);
