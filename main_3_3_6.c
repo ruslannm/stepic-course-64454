@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "stdlib.h"
-#define MOD     1000000123
+#define MOD     1000000033
+#define MAXN    1505
+
 
 long long mnorm(long long d, long long mod)
 {
@@ -12,38 +14,54 @@ long long madd(long long x, long long y, long long mod)
     return (mnorm((mnorm(x, mod) + mnorm(y, mod)) % mod, mod));
 }
 
-long long  horse(int n, int m)
+long long  rook(int n, int m)
 {
     int i;
     int j;
-    int d;
     long long **dp;
+    long long pref_col[MAXN];
+    long long pref_row[MAXN];
     long long ret;
 
-    dp = (long long **)malloc(sizeof(long long*) * (n + 3)); 
+    if (1 == n && 1 == m)
+        return (1);
+    
+    dp = (long long **)malloc(sizeof(long long*) * (n + 1)); 
     i = -1;
-    while (++i <= n + 2)
+    while (++i <= n)
     {
-        dp[i] = (long long*)malloc(sizeof(long long) * (m + 3));
         j = -1;
-        while (++j <= m + 2)
-            dp[i][j] = 0;
-    };
-    dp[2][2] = 1;
-    d = 1;
-    while (++d < n + m)
-    {
-        i = 2 + (d > m ? d - m : 0);
-        while (i < n + 2 && i < d + 2)
+        dp[i] = (long long*)malloc(sizeof(long long) * (m + 1));
+        while (++j <= m)
         {
-            j = d + 1 + 2 - i;
-            dp[i][j] = (dp[i - 2][j + 1] + dp[i - 2][j - 1] + dp[i - 1][j - 2] + dp[i + 1][j - 2]) % MOD;
-            ++i;
+            dp[i][j] = 0;
+            pref_col[j] = 0;
+            pref_row[j] = 0;
         }
     }
-    ret = dp[n + 1][m + 1];
+    i = 0;
+    while (++i <= n)
+    {
+        j = 0;
+        while (++j <=m)
+        {
+            if (1 == i && 1 == j)
+            {
+                pref_col[j] = 1;
+                pref_row[i] = 1;
+            }
+            else
+            {
+                pref_row[j] = (pref_row[j - 1] + dp[i][j]) % MOD;
+                dp[i][j] = (pref_row[j - 1] + pref_col[j]) % MOD;
+                pref_row[j] = (pref_row[j - 1] + dp[i][j]) % MOD;
+                pref_col[j] = (pref_col[j] + dp[i][j]) % MOD;
+            }
+        }
+    }
+    ret = dp[n][m];
     i = -1;
-    while (++i <= n + 2)
+    while (++i <= n)
         free(dp[i]);
     free(dp);  
     return (ret);
@@ -55,6 +73,6 @@ int main(void)
     int m;
 
     scanf("%d %d", &n, &m);
-    printf("%lld\n", horse(n, m));
+    printf("%lld\n", rook(n, m));
     return (0);
 }
