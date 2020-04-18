@@ -13,7 +13,9 @@ int main()
 	int j;
 	int d;
 
-	cin >> n >> m;
+	//cin >> n >> m;
+	n = 1000;
+	m = 1000;
 	vector <vector <long long> > ar(n + 1, vector <long long> (m + 1, 0));
 	vector <vector <long long> > dp(n + 1, vector <long long> (m + 1, MAXD));
 	vector <int> pref_col(m + 1, 0);
@@ -26,7 +28,7 @@ int main()
 	{
 		j = 0;
 		while (++j <= m)
-			cin >> ar[i][j];
+			ar[i][j] = 1000 * 1000 * 1000;//	cin >> ar[i][j];
 	}
    i = 0;
     while (++i <= n)
