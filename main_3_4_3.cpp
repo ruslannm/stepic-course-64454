@@ -1,63 +1,41 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
 
 using namespace std;
-
-long long f_max(long long a, long long b, long long c)
-{
-    if (a > b)
-        return (a > c ? a : c);
-    else 
-        return (b > c ? b : c);
-}
 
 int main()
 {
     int n;
     int i;
+    int a;
     
     cin >> n;
-	vector <long long>  a(n + 1);
-    vector <long long>  dp(n + 1);
-    i = 0;
-    dp[0] = 0;
+    vector <int>  dp(n + 1);
+    i = 1;
+    dp[1] = 0;
     while (++i <= n)
     {
-        cin >> a[i];
-        if (i > 4)
-            dp[i]= f_max(dp[i - 5], dp[i - 3], dp[i - 1]) + a[i];
-        else if (i > 2)
-            dp[i]= f_max(dp[i - 3], dp[i - 3], dp[i - 1]) + a[i];
-        else 
-            dp[i]= dp[i - 1] + a[i];
+        dp[i] = dp[i - 1];
+        if (i % 3 == 0 && dp[i / 3] < dp[i])
+            dp[i] = dp[i / 3];
+        if (i % 2 == 0 && dp[i / 2] < dp[i])
+            dp[i]= dp[i / 2];
+        dp[i]++;
     }
     vector <long long> ans;
     i = n;
     while (i > 0)
     {
         ans.push_back(i);
-        if (i > 4)
-        {
-            if (dp[i - 1] + a[i] == dp[i])
-                i--;
-            else if (dp[i - 3] + a[i] == dp[i])
-                i = i - 3;
-            else 
-                i = i - 5;
-        }
-        else if (i > 2)
-        {
-            if (dp[i - 1] + a[i] == dp[i])
-                i--;
-            else 
-                i = i - 3;
-        }
-        else 
+        if (dp[i - 1] + 1 == dp[i])
             i--;
+        else if (i % 2 == 0 && dp[i / 2] + 1 == dp[i])
+            i = i / 2;
+        else 
+            i = i / 3;
     }
     i = ans.size();
-    cout << dp[n] << " " << i << endl;
+    cout << dp[n] << endl;
     while (--i >= 0)
         cout << ans[i] << " ";
     return 0;
