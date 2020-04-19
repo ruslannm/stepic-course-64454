@@ -9,6 +9,7 @@ int main()
 	int n;
 	int k;
 	int i;
+	int j;
 
 	cin >> n >> k;
 	vector <long long> ar(n + 1, 0);
@@ -21,25 +22,16 @@ int main()
     i = 0;
     while (++i <= n)
     {
-		if (pref_i[i - 1] > i - k)
+		dp[i] = dp[i - 1];
+		parent_i[i] = i - 1;
+		j = 1;
+		while (++j <= k && i - j >= 0)
 		{
-			dp[i] = min(dp[pref_i[i - 1]], dp[i - k]);
-			if (dp[i] == dp[pref_i[i - 1]])
+			if (dp[i - j] < dp[i])
 			{
-				pref_i[i] = pref_i[i - 1];
-				parent_i[i] = pref_i[i - 1];	
+				dp[i] = dp[i - j];
+				parent_i[i] = i - j;
 			}
-			else
-			{
-				pref_i[i] = i - k;
-				parent_i[i] = i - k;	
-			}
-		}
-		else
-		{
-			dp[i] = dp[i - k];
-			parent_i[i] = pref_i[i - 1];
-			pref_i[i] = i;			
 		}
 		dp[i] += ar[i];
 	}
