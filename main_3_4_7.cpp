@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#define MAXD    1e18L
 
 using namespace std;
 
@@ -10,24 +9,15 @@ int main()
 	int n;
 	int k;
 	int i;
-	int j;
-	int d;
 
 	cin >> n >> k;
-	//n = 5; k = 2;
 	vector <long long> ar(n + 1, 0);
 	vector <long long> dp(n + 1, 0);
 	vector <int> pref_i(n + 1, 0);  // i-coordinate best parent for current dp
-	
 	vector <int> parent_i(n + 1, 0);
 	i = 0;
 	while (++i <= n)
 		cin >> ar[i];
-	/*ar[1] = 4;
-	ar[2] = 7;
-	ar[3] = 6;
-	ar[4] = 6;
-	ar[5] = 6;*/
     i = 0;
     while (++i <= n)
     {
@@ -43,14 +33,7 @@ int main()
 			{
 				pref_i[i] = i - k;
 				parent_i[i] = i - k;	
-				/* code */
 			}
-			
-/*			if (dp[i] < dp[i - 1] - ar[i])
-				pref_i[i] = i;
-			else
-*/				pref_i[i] = pref_i[i - 1];		
-//			parent_i[i] = pref_i[i - 1];	
 		}
 		else
 		{
