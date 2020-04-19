@@ -14,15 +14,13 @@ int main()
 	int d;
 
 	cin >> n >> m;
-	//n = 1000;
-	//m = 1000;
 	vector <vector <long long> > ar(n + 1, vector <long long> (m + 1, 0));
 	vector <vector <long long> > dp(n + 1, vector <long long> (m + 1, MAXD));
-	vector <int> pref_col(m + 1, 0);
-	vector <int> pref_row(m + 1, 0);
+	vector <int> pref_i(m + 1, 0);  // i-coordinate best parent for current dp
+	vector <int> pref_j(m + 1, 0);  // j-coordinate best parent for current dp
 
-	vector <vector <int> > parent_x(n + 1, vector <int> (m + 1, -1));
-	vector <vector <int> > parent_y(n + 1, vector <int> (m + 1, -1));
+	vector <vector <int> > parent_i(n + 1, vector <int> (m + 1, 0));
+	vector <vector <int> > parent_j(n + 1, vector <int> (m + 1, 0));
 	i = 0;
 	while (++i <= n)
 	{
@@ -39,33 +37,33 @@ int main()
             if (1 == i && 1 == j)
             {
 				dp[1][1] = ar[1][1];
-                pref_col[j] = 1;
-                pref_row[j] = 1;
+                pref_i[j] = 1;
+                pref_j[j] = 1;
             }
             else
             {
-				dp[i][j] = min(dp[i][pref_row[j - 1]], dp[pref_col[j]][j]);
-				if (dp[i][j] == dp[i][pref_row[j - 1]])
+				dp[i][j] = min(dp[i][pref_j[j - 1]], dp[pref_i[j]][j]);
+				if (dp[i][j] == dp[i][pref_j[j - 1]])
 				{
-					parent_x[i][j] = i; 
-					parent_y[i][j] = pref_row[j - 1];
+					parent_i[i][j] = i; 
+					parent_j[i][j] = pref_j[j - 1];
 				}
 				else
 				{
-					parent_x[i][j] = pref_col[j]; 
-					parent_y[i][j] = j;
+					parent_i[i][j] = pref_i[j]; 
+					parent_j[i][j] = j;
 				}
 				dp[i][j] += ar[i][j];
 				if (i == 1)
-					pref_col[j] = 1;
+					pref_i[j] = 1;
 				if (j == 1)
-					pref_row[j] = 1;
+					pref_j[j] = 1;
 				else 
-					pref_row[j] = pref_row[j - 1];
-				if (dp[i][j] < dp[i][pref_row[j - 1]])
-					pref_row[j] = j;
-				if (dp[i][j] < dp[pref_col[j]][j])
-					pref_col[j] = i;
+					pref_j[j] = pref_j[j - 1];
+				if (dp[i][j] < dp[i][pref_j[j - 1]])
+					pref_j[j] = j;
+				if (dp[i][j] < dp[pref_i[j]][j])
+					pref_i[j] = i;
             }
         }
     }
@@ -80,8 +78,8 @@ int main()
 		ans.push_back(make_pair(i, j));
 		old_i = i;
 		old_j = j;
-		i = parent_x[old_i][old_j];
-		j = parent_y[old_i][old_j];
+		i = parent_i[old_i][old_j];
+		j = parent_j[old_i][old_j];
 	}
 	i = ans.size();
 	cout << dp[n][m] << " " << i << endl;
