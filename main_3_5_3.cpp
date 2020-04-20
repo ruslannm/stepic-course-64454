@@ -12,19 +12,11 @@ int main()
 	int a;
 	int ret;
 
-	//cin >> s >> n;
-	s = 10; n = 6;
+	cin >> s >> n;
 	vector <int> w(n + 1);
-
 	i = 0;
-	//while (++i <= n)
-	//	cin >> w[i];
-	w[1] = 2;
-	w[2] = 3;
-	w[3] = 4;
-	w[4] = 4;
-	w[5] = 6;
-	w[6] = 9;
+	while (++i <= n)
+		cin >> w[i];
 	vector <vector <int> > dp(n + 1, vector <int> (s + 1, 0));
 
 	dp[0][0] = 1;
@@ -58,13 +50,13 @@ int main()
 		}
 	}
 	vector <pair <int, int> > ans;
-	while (i > 0 && j > 0)
+	while (j > 0)
 	{
-		ans.push_back(make_pair(i, j));
-		j = j - w[i];
 		i = 0;
 		while (dp[i][j] != 1)
 			++i;
+		ans.push_back(make_pair(i, j));
+		j = j - w[i];
 	}
 	i = ans.size();
 	cout << i << endl;
