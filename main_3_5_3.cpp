@@ -17,8 +17,8 @@ int main()
 	vector <int> w(n + 1);
 
 	i = 0;
-//	while (++i <= n)
-//		cin >> w[i];
+	//while (++i <= n)
+	//	cin >> w[i];
 	w[1] = 2;
 	w[2] = 3;
 	w[3] = 4;
@@ -26,23 +26,20 @@ int main()
 	w[5] = 6;
 	w[6] = 9;
 	vector <vector <int> > dp(n + 1, vector <int> (s + 1, 0));
-	vector <vector <int> > parent_x(n + 1, vector <int> (s + 1, -1));
-	vector <vector <int> > parent_y(n + 1, vector <int> (s + 1, -1));
 
-	dp[0][0] = 0;
-	parent_x[0][0] = 0;
-	parent_y[0][0] = 0;
+	dp[0][0] = 1;
 	i = 0;
 	while (++i <= n)
 	{
 		j = -1;
 		while (++j <= s)
 		{
-			if (dp[i - 1][j] < dp[i - 1][j - w[i]])
+			if (w[i] <= j)
 			{
-				dp[i][j] = dp[i - 1][j - w[i]] + w[i];
-				parent_x[i][j] = i - 1;
-				parent_y[i][j] = j - w[i];
+				if (1 == dp[i - 1][j - w[i]])
+					dp[i][j] = 1;
+				else
+					dp[i][j] = dp[i - 1][j];
 			}
 			else
 			{
@@ -53,7 +50,7 @@ int main()
 	ret = ++s;
 	while (--ret >= 0)
 	{
-		if (dp[n][ret] <= s) {
+		if (dp[n][ret] == 1) {
 			i = n;
 			j = ret;
 			cout << ret << " ";
@@ -61,15 +58,13 @@ int main()
 		}
 	}
 	vector <pair <int, int> > ans;
-	int old_i;
-	int old_j;
 	while (i > 0 && j > 0)
 	{
 		ans.push_back(make_pair(i, j));
-		old_i = i;
-		old_j = j;
-		i = parent_x[old_i][old_j];
-		j = parent_y[old_i][old_j];
+		j = j - w[i];
+		i = 0;
+		while (dp[i][j] != 1)
+			++i;
 	}
 	i = ans.size();
 	cout << i << endl;
