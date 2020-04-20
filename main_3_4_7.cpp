@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -10,30 +9,38 @@ int main()
 	int k;
 	int i;
 	int j;
+	int deque_i;   // deque size
 
 	cin >> n >> k;
 	vector <long long> ar(n + 1, 0);
 	vector <long long> dp(n + 1, 0);
-	vector <int> pref_i(n + 1, 0);  // i-coordinate best parent for current dp
+	vector <int> deque(k + 1, 0); //i-coordinate best parent for current dp
 	vector <int> parent_i(n + 1, 0);
 	i = 0;
 	while (++i <= n)
 		cin >> ar[i];
+	deque[0] = 0;
+	deque_i = 0;
     i = 0;
-    while (++i <= n)
+	while (++i <= n)
     {
-		dp[i] = dp[i - 1];
-		parent_i[i] = i - 1;
-		j = 1;
-		while (++j <= k && i - j >= 0)
+		if (deque[0] < i - k)
 		{
-			if (dp[i - j] < dp[i])
+			if (deque_i)
 			{
-				dp[i] = dp[i - j];
-				parent_i[i] = i - j;
+				j = -1;
+				while (++j < deque_i)
+					deque[j] = deque[j + 1];
+				--deque_i;
 			}
 		}
-		dp[i] += ar[i];
+		dp[i] = dp[deque[0]] + ar[i];
+		parent_i[i] = deque[0];
+		j = 0;
+		while (j <= deque_i && dp[i] < dp[deque[deque_i - j]])
+			++j;
+		deque_i = deque_i - j;
+		deque[++deque_i] = i;
 	}
 
 	vector <int> ans;
