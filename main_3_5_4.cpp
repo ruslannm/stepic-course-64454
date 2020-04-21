@@ -5,17 +5,13 @@ using namespace std;
 
 int f_sort(long long *p, long long *w, long long *c, int i)
 {
-	int pi;
-	int pi1;
-	int ret;
-
-	ret = 0;
-	pi = p[i];
-	pi1 = p[i - 1];
-
-	if (c[pi1] * w[pi] > c[pi] * w[pi1]) 
-		ret = 1;
-	return (ret);
+	if (w[p[i]] == 0 && w[p[i]] != 0)
+		return 0;
+	if (w[p[i]] == 0 && w[p[i]] == 0 && c[p[i]] < c[p[i]])
+		return 1;
+	if (c[p[i]] * w[p[i - 1]] < c[p[i - 1]] * w[p[i]]) 
+		return 1;
+	return 0;
 }
 
 int main()
@@ -31,20 +27,35 @@ int main()
 	long long c[MAXN];
 	long long p[MAXN];  //order
 
-	cin >> s >> n;
+	//cin >> s >> n;
+	s = 8; n =4;
 	i = -1;
 	while (++i <= n)
 		p[i] = i;
 	i = 0;
-	while (++i <= n)
+/*	while (++i <= n)
 		cin >> w[i];
 	i = 0;
 	while (++i <= n)
 		cin >> c[i];
+*/
+	w[1] = 7;
+	w[2] = 0;
+	w[3] = 0;
+	w[4] = 1;
+	c[1] = 9;
+	c[2] = 2;
+	c[3] = 2;
+	c[4] = 2;
 
 	i = n;
 	while (i > 1)
 	{
+		k = -1;
+		while (++k <= n)
+			cout << p[k] << " ";
+		cout << endl;
+//		
 		k = 0;
 		j = 1;
 		while (++j <= i)
