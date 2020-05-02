@@ -1,17 +1,14 @@
 #include <iostream>
 #include <vector>
-#include <list>
 
 using namespace std;
 
 vector<int> used(20001, 0);
-list<int> visit;
 vector<int> component(20001, 0);
 
 void dfs(const vector<vector<int> >& graf, int v, int l)
 {
 	used[v] = 1;
-	//visit.push_back(l);
 	component[v] = l;
 	for (auto u : graf[v])
 	{
@@ -33,7 +30,6 @@ int main()
 	int l; //quant of component
 
 	cin >> n >> m;
-    //n = 5; m = 7;
 	vector <vector <int> > graf(n + 1);
 	i = 0;
 	while (++i <= m)
@@ -42,7 +38,7 @@ int main()
 		graf[u].push_back(v);
 		graf[v].push_back(u);
 	}
-	cout << "size=" << graf.size() << '\n';
+/*	cout << "size=" << graf.size() << '\n';
 	i = 0;
 	while (++i <= n)
 	{
@@ -51,6 +47,7 @@ int main()
 			cout << i2 << " ";
 		cout << "\n";
 	}
+*/
 	i = 0;
 	l = 0;
 	while (++i <= n)
@@ -65,7 +62,5 @@ int main()
 	i = 0;
 	while (++i <= n)
 		cout << component[i] << " ";
-//	for (auto u: visit)
-//		cout << u << " ";
 	return 0;
 }
