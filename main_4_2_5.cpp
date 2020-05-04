@@ -6,6 +6,7 @@
 
 using namespace std;
 
+int matrix[501][501];
 vector<int> used(501, 0);
 vector<pair<int, int>> edges;
 set<int> edges_numbers;
@@ -28,8 +29,12 @@ int get_number(int u, int v)
 
 void add_number(int u, int v)
 {
-	int ret;
+	int tmp;
 
+	tmp = matrix[u][v];
+	if (tmp)
+		edges_numbers.insert(tmp);
+	/*
 	for (int i = 0; i <= edges.size(); ++i)
 	{
 		if ((edges[i].first == u && edges[i].second == v) || (edges[i].first == v && edges[i].second == u))
@@ -38,8 +43,9 @@ void add_number(int u, int v)
 				return ;
 			}
 	}
+	*/
 }
-
+/*
 void del_number(int u, int v)
 {
 	int ret;
@@ -53,23 +59,16 @@ void del_number(int u, int v)
 			}
 	}
 }
-
+*/
 
 void dfs(const vector<vector<int> >& graf, int to, int from, vector<int> & edges_track, int edge)
 {
 	int tmp; 
-	int count_edges;
 	int count_vertices;
 
 	
 	edges_track[edge] = 1;
 	add_number(to, from);
-	count_edges = 0;
-	for (int i = 1; i <= edges_track.size(); ++i)
-	{
-		if (edges_track[i] != 0)
-			++count_edges;
-	}
 	used[to] = 1;
 	count_vertices = 0;
 	for (auto u : graf[to])
@@ -77,27 +76,29 @@ void dfs(const vector<vector<int> >& graf, int to, int from, vector<int> & edges
 		if (0 == used[u])
 		{
 			tmp = get_number(to, u);
+			tmp = matrix[to][u];
 			++count_vertices;
 			if (edges_solve[tmp] && edges_track[tmp] == 0)
 			{
+				--count_vertices;
 				dfs(graf, u, to, edges_track, tmp);
 			}
 		}
 	}
-	tmp = 0;
-	for (int i = 1; i <= edges_track.size(); ++i)
+	if (count_vertices)
 	{
-		if (edges_track[i] != 0)
-			++tmp;
-	}
-	if (count_vertices && tmp < count_edges + count_vertices)
-	{
-//		edges_track[edge] = 0;
-		
-//		del_number(to, from);
 		for (int j = 0; j <= n; ++j)
 			used[j] = 1;
 	}
+
+//	if (count_vertices && tmp < count_edges + count_vertices)
+//	{
+//		edges_track[edge] = 0;
+		
+//		del_number(to, from);
+//		for (int j = 0; j <= n; ++j)
+//			used[j] = 1;
+//	}
 	//used[to] = 2;
 }
 
@@ -123,6 +124,8 @@ int main()
 		edges.push_back(make_pair(u, v));
 		graf[u].push_back(v);
 		graf[v].push_back(u);
+		matrix[u][v] = j;
+		matrix[v][u] = j;
 	}
  */
     int edges_test[10][2] = {{1, 3},{3, 5}, {1, 6}, {1,5}, {1, 4}, {5, 6},{6, 4},{2, 6},{2, 1},{3, 2}};	
@@ -131,6 +134,8 @@ int main()
 		edges.push_back(make_pair(edges_test[j][0], edges_test[j][1]));
 		graf[edges_test[j][1]].push_back(edges_test[j][0]);
 		graf[edges_test[j][0]].push_back(edges_test[j][1]);
+		matrix[edges_test[j][0]][edges_test[j][1]] = j + 1;
+		matrix[edges_test[j][1]][edges_test[j][0]] = j + 1;
 	}
 //	cin >> q;
 	q = 5;
