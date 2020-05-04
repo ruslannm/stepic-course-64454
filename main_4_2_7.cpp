@@ -1,18 +1,27 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 vector<int> used(501, 0);
 int cicle;
+int start_cicle;
+vector<int> solve(501, 0);
 
 void dfs(const vector<vector<int> >& graf, int to, int from)
 {
 	used[to] = 1;
+	solve.push_back(to);
 	for (auto u : graf[to])
 	{
+		if (1 == cicle)
+			return;
 		if (1 == used[u])
+		{
 			cicle = 1;
+			start_cicle = u;
+		}
 		else if (0 == used[u])
 			dfs(graf, u, to);
 	}
@@ -45,7 +54,16 @@ int main()
 		dfs(graf, i, 0);
 		if (cicle)
 		{
-			cout << "YES";
+			int j = solve.size();
+			int q = 1;
+			while (solve[j - q] != start_cicle)
+				++q;
+			cout << "YES\n" << q << "\n";
+			while (q)
+			{
+				cout << solve[j - q] << " ";
+				--q;
+			}
 			return 0;
 		}
 	}
