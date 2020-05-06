@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#define MAXN 6 //200001
 
 using namespace std;
 
-vector<int> used(501, 0);
+vector<int> used(MAXN, 0);
 int pos;
 vector<int> solve;
 int cicle;
@@ -32,7 +33,7 @@ int main()
 	int v;
 
 //	cin >> n >> m;
-	n = 4; m = 4;
+	n = 5; m = 8;
 	vector <vector <int> > graf(n + 1);
 /*	i = 0;
 	while (++i <= m)
@@ -41,12 +42,26 @@ int main()
 		graf[u].push_back(v);
 	}
 */
-	int test[4][2] = {{1,2}, {2,3}, {3,4}, {4, 1}};
-	i = -1;
+	vector <int> test(n + 1);
+/*	i = -1;
 	while (++i < n)
 	{
-		graf[test[i][0]].push_back(test[i][1]);
+		cin >> u;
+		test[i]= u;
 	}
+*/
+	int test1[8][2] = {{5,4}, {2,3}, {5,3}, {2, 1}, {4,2}, {5,2}, {4,1}, {5,1}};
+	i = -1;
+	while (++i < m)
+	{
+		graf[test1[i][0]].push_back(test1[i][1]);
+	}
+	test[0] = 5;
+	test[1] = 4;
+	test[2] = 2;
+	test[3] = 3;
+	test[4] = 1;
+
 //
 	pos = n;
 	solve.resize(n + 1);
@@ -62,9 +77,22 @@ int main()
 			return 0;
 		}
 	}
-	cout << "YES\n";
-	i = -1;
+	vector <int> used1(MAXN, 0);
+	i = 0;
+	used1[test[i]] = 1;
 	while (++i < n)
-		cout << solve[i] << " ";
+	{
+		for (int j : graf[test[i]])
+		{
+			if (used1[j])
+			{
+				cout << "NO\n";
+				return 0;
+			}
+		}
+		used1[test[i]] = 1;
+	}
+	
+	cout << "YES\n";
 	return 0;
 }
