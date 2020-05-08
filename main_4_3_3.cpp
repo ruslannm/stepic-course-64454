@@ -14,23 +14,27 @@ int is_solve;
 int x2;
 int y2;
 vector<pair<int, int>> vertices;
-vector <vector <int> > graf(MAXN);
+//vector <vector <int> > graf(MAXN * MAXN);
 int matrix[MAXN][MAXN];
+int graf[MAXN][MAXN];
 
 void build_graf(int x, int y, int prev)
 {
-	if (matrix[x][y])
-		return ;
-	matrix[x][y] = 1;
-	vertices.push_back(make_pair(x, y));
+	if (-1 == matrix[x][y])
+		vertices.push_back(make_pair(x, y));
 	int current = vertices.size() - 1;
 	if (x == x2 && y == y2)
 		is_solve = current;
 	if (current)
 	{
-		graf[current].push_back(prev);
-		graf[prev].push_back(current);
+//		graf[current].push_back(prev);
+//		graf[prev].push_back(current);
+		graf[current][prev] = 1;
+		graf[prev][current] = 1;
 	}
+	if (0 == matrix[x][y])
+		return;
+	matrix[x][y] = 0;
 	if (x + p <= m && y + q <= n)
 		build_graf(x + p, y + q, current);
 	if (x + p <= m && y - q > 0)
@@ -59,12 +63,15 @@ int main()
 	int d;
 	queue <int> qu;
 
-	for (int i1 = 1; i1 <= 100; ++i1)
+	for (int i1 = 0; i1 <= 100; ++i1)
 	{
-		for (int j1 = 1; j1 <= 100; ++j1)
-			matrix[i1][j1] = 0;
+		for (int j1 = 0; j1 <= 100; ++j1)
+		{
+			matrix[i1][j1] = -1;
+			graf[i1][j1] = 0;
+		}
 	}
-    m = 3; n = 3; p = 0; q = 0; x1 = 1; y1 = 1; x2 = 1; y2 = 1;	
+    m = 4; n = 4; p = 1; q = 1; x1 = 1; y1 = 1; x2 = 3; y2 = 3;	
 //	cin >> m >> n >> p >> q >> x1 >> y1 >> x2 >> y2;
 	is_solve = -1;
 	build_graf(x1, y1, 0);
@@ -76,9 +83,9 @@ int main()
 
 	d = 0;
 	n = vertices.size();
-	vector <int>  dist(n + 1,- 1);
+	vector <int>  dist(n,- 1);
 	i = -1;
-	while (++i <= n)
+	while (++i < n)
 	{
 		v = i;
 		dist[v] = 0;
@@ -87,9 +94,10 @@ int main()
 		{
 			v = qu.front();
 			qu.pop();
-			for (auto u: graf[v])
+			u = -1;
+			while (++u <= n)
 			{
-				if (-1 == dist[u])
+				if (graf[v][u] && -1 == dist[u])
 				{
 					dist[u] = dist[v] + 1;
 					if (u == is_solve)
