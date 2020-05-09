@@ -2,7 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-#define MAXN 5//101
+#include <set>
+#define MAXN 101
 using namespace std;
 
 
@@ -14,9 +15,9 @@ int is_solve;
 int x2;
 int y2;
 vector<pair<int, int>> vertices;
-//vector <vector <int> > graf(MAXN * MAXN);
+vector <set <int> > graf(MAXN * MAXN);
 int matrix[MAXN][MAXN];
-int graf[MAXN][MAXN];
+//int graf[MAXN][MAXN];
 
 int check(int u)
 {
@@ -33,21 +34,21 @@ void build_graf(int x, int y, int prev)
 		vertices.push_back(make_pair(x, y));
 		current = vertices.size() - 1;
 		matrix[x][y] = current;
+		if (current)
+		{
+			graf[current].insert(prev);
+			graf[prev].insert(current);
+		}
 	}
 	else 
+	{
 		current = matrix[x][y];
+		graf[current].insert(prev);
+		graf[prev].insert(current);
+		return;
+	}
 	if (x == x2 && y == y2)
 		is_solve = current;
-	if (current)
-	{
-//		graf[current].push_back(prev);
-//		graf[prev].push_back(current);
-		graf[current][prev] = 1;
-		graf[prev][current] = 1;
-	}
-	if (0 == matrix[x][y])
-		return;
-	matrix[x][y] = 0;
 	if (x + p <= m && y + q <= n)
 		build_graf(x + p, y + q, current);
 	if (x + p <= m && y - q > 0)
@@ -71,20 +72,17 @@ int main()
 	int x1;
 	int y1;
 	int i;
-	int u;
 	int v;
 	int d;
 	queue <int> qu;
 
-	for (int i1 = 0; i1 <= 100; ++i1)
+	for (int i1 = 0; i1 <= MAXN; ++i1)
 	{
-		for (int j1 = 0; j1 <= 100; ++j1)
-		{
+		for (int j1 = 0; j1 <= MAXN; ++j1)
 			matrix[i1][j1] = -1;
-			graf[i1][j1] = 0;
-		}
 	}
-    m = 3; n = 3; p = 1; q = 1; x1 = 1; y1 = 1; x2 = 3; y2 = 1;	
+
+    m = 4; n = 4; p = 1; q = 1; x1 = 1; y1 = 1; x2 = 4; y2 = 4;	
 //	cin >> m >> n >> p >> q >> x1 >> y1 >> x2 >> y2;
 	is_solve = -1;
 	build_graf(x1, y1, 0);
@@ -94,32 +92,50 @@ int main()
 		return 0;
 	}
 
-	d = 0;
-	n = vertices.size();
-	vector <int>  dist(n,- 1);
-	i = -1;
-	while (++i < n)
+	cout << "MATRIX \n ";
+	for (int i1 = 0; i1 <= m; ++i1)
 	{
-		v = i;
-		dist[v] = 0;
-		qu.push(v);
-		while (!qu.empty())
+		for (int j1 = 0; j1 <= n; ++j1)
+			cout << matrix[i1][j1] << " ";
+		cout << "\n ";
+	}
+	n = vertices.size();
+
+	cout << "GRAF \n ";
+	for (int i1 = 0; i1 < n; ++i1)
+	{
+		for (int j1 : graf[i1])
+			cout << j1 << " ";
+		cout << "\n ";
+	}
+
+	cout << "vertices \n ";
+	for (auto i1 : vertices)
+	{
+			cout << i1.first << " " << i1.second << "\n";
+	}
+	cout << "vertices end \n ";
+
+	d = 0;
+	vector <int>  dist(n,- 1);
+	v = 0;
+	dist[v] = 0;
+	qu.push(v);
+	while (!qu.empty())
+	{
+		v = qu.front();
+		qu.pop();
+		for (int u : graf[v])
 		{
-			v = qu.front();
-			qu.pop();
-			u = -1;
-			while (++u <= n)
+			if (-1 == dist[u])
 			{
-				if (1 == graf[v][u] && -1 == dist[u])
+				dist[u] = dist[v] + 1;
+				if (check(u))
 				{
-					dist[u] = dist[v] + 1;
-					if (check(u))
-					{
-						cout <<  dist[u] << "\n";
-						return 0;
-					}
-					qu.push(u);
+					cout <<  dist[u] << "\n";
+					return 0;
 				}
+				qu.push(u);
 			}
 		}
 	}
