@@ -71,18 +71,17 @@ int main()
 {
 	int x1;
 	int y1;
-	int i;
 	int v;
 	int d;
 	queue <int> qu;
 
-	for (int i1 = 0; i1 <= MAXN; ++i1)
+	for (int i1 = 0; i1 < MAXN; ++i1)
 	{
-		for (int j1 = 0; j1 <= MAXN; ++j1)
+		for (int j1 = 0; j1 < MAXN; ++j1)
 			matrix[i1][j1] = -1;
 	}
 
-    m = 4; n = 4; p = 1; q = 1; x1 = 1; y1 = 1; x2 = 4; y2 = 4;	
+    m = 5; n = 5; p = 1; q = 0; x1 = 1; y1 = 1; x2 = 5; y2 = 5;	
 //	cin >> m >> n >> p >> q >> x1 >> y1 >> x2 >> y2;
 	is_solve = -1;
 	build_graf(x1, y1, 0);
@@ -130,7 +129,7 @@ int main()
 			if (-1 == dist[u])
 			{
 				dist[u] = dist[v] + 1;
-				if (check(u))
+				if (matrix[x2][y2] == u)
 				{
 					cout <<  dist[u] << "\n";
 					return 0;
