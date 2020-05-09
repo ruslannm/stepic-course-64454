@@ -17,14 +17,6 @@ int y2;
 vector<pair<int, int>> vertices;
 vector <set <int> > graf(MAXN * MAXN);
 int matrix[MAXN][MAXN];
-//int graf[MAXN][MAXN];
-
-int check(int u)
-{
-	if ((vertices[u].first == x2 && vertices[u].second == y2) || (vertices[u].first == y2 && vertices[u].second == x2))
-		return 1;
-	return 0;
-}
 
 void build_graf(int x, int y, int prev)
 {
@@ -43,8 +35,11 @@ void build_graf(int x, int y, int prev)
 	else 
 	{
 		current = matrix[x][y];
-		graf[current].insert(prev);
-		graf[prev].insert(current);
+		if (current)
+		{
+			graf[current].insert(prev);
+			graf[prev].insert(current);
+		}
 		return;
 	}
 	if (x == x2 && y == y2)
@@ -81,16 +76,10 @@ int main()
 			matrix[i1][j1] = -1;
 	}
 
-    m = 5; n = 5; p = 1; q = 0; x1 = 1; y1 = 1; x2 = 5; y2 = 5;	
+    m = 2; n = 2; p = 0; q = 0; x1 = 1; y1 = 1; x2 = 2; y2 = 2;	
 //	cin >> m >> n >> p >> q >> x1 >> y1 >> x2 >> y2;
 	is_solve = -1;
 	build_graf(x1, y1, 0);
-	if (is_solve < 1)
-	{
-		cout << is_solve << "\n";
-		return 0;
-	}
-
 	cout << "MATRIX \n ";
 	for (int i1 = 0; i1 <= m; ++i1)
 	{
@@ -114,6 +103,12 @@ int main()
 			cout << i1.first << " " << i1.second << "\n";
 	}
 	cout << "vertices end \n ";
+
+	if (is_solve < 1)
+	{
+		cout << is_solve << "\n";
+		return 0;
+	}
 
 	d = 0;
 	vector <int>  dist(n,- 1);
